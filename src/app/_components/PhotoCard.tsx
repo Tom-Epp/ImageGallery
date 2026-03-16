@@ -7,9 +7,10 @@ import Link from 'next/link';
 interface PhotoCardProps {
   photo: Photo;
   tabIndex: number;
+  priority?: boolean;
 }
 
-export const PhotoCard = ({ photo, tabIndex }: PhotoCardProps) => {
+export const PhotoCard = ({ photo, tabIndex, priority }: PhotoCardProps) => {
   const [loaded, setLoaded] = useState(false);
   const [focused, setFocused] = useState(false);
 
@@ -30,7 +31,7 @@ export const PhotoCard = ({ photo, tabIndex }: PhotoCardProps) => {
       tabIndex={tabIndex}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      className="group relative overflow-hidden rounded-xl bg-neutral-100 cursor-pointer break-inside-avoid mb-2 md:mb-3 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
+      className="group relative overflow-hidden rounded-xl bg-neutral-100 cursor-pointer aspect-square focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
     >
       <div
         className={`absolute inset-0 transition-opacity duration-500 ${loaded ? 'opacity-0' : 'opacity-100'}`}
@@ -39,19 +40,20 @@ export const PhotoCard = ({ photo, tabIndex }: PhotoCardProps) => {
         <Image
           alt=""
           src={photo.urls.thumb}
-          width={photo.width}
-          height={photo.height}
+          fill
+          sizes="(max-width: 768px) 33vw, 33vw"
           aria-hidden
           className="w-full h-full object-cover blur-xl scale-110"
         />
       </div>
 
       <Image
-        src={photo.urls.small}
+        priority={priority}
+        src={photo.urls.regular}
         alt={photo.alt_description ?? ''}
-        width={photo.width}
-        height={photo.height}
-        className={`w-full h-auto transition-all duration-500 group-hover:scale-105 ${
+        fill
+        sizes="(max-width: 768px) 33vw, 33vw"
+        className={`object-cover transition-all duration-500 group-hover:scale-105 ${
           loaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={onImageLoad}
