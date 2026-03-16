@@ -116,7 +116,7 @@ describe('PhotoFeed', () => {
       mockUsePhotoFeed.mockReturnValue({
         ...defaultPhotoFeed,
         isFetchingNextPage: true,
-        isError: true,
+        isError: false,
       } as never);
 
       render(<PhotoFeed />);
@@ -197,7 +197,7 @@ describe('PhotoFeed', () => {
     it('passes the query to usePhotoFeed when search changes', () => {
       render(<PhotoFeed />);
 
-      expect(mockUsePhotoFeed).toHaveBeenCalledWith(undefined);
+      expect(mockUsePhotoFeed).toHaveBeenCalledWith(undefined, 'latest');
     });
   });
 });

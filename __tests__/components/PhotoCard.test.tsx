@@ -25,7 +25,7 @@ describe('PhotoCard', () => {
 
     const mainImage = screen.getByAltText(mockPhoto.alt_description!);
     expect(mainImage).toBeInTheDocument();
-    expect(mainImage).toHaveAttribute('src', mockPhoto.urls.small);
+    expect(mainImage).toHaveAttribute('src', mockPhoto.urls.regular);
   });
 
   it('renders the photo with correct alt text', () => {
