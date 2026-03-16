@@ -7,10 +7,11 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get('page') ?? '1';
   const perPage = searchParams.get('per_page') ?? '10';
   const query = searchParams.get('query');
+  const orderBy = searchParams.get('order_by') ?? 'latest';
 
   const url = query
-    ? `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`
-    : `https://api.unsplash.com/photos?page=${page}&per_page=${perPage}`;
+    ? `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}&order_by=${orderBy}`
+    : `https://api.unsplash.com/photos?page=${page}&per_page=${perPage}&order_by=${orderBy}`;
 
   const response = await fetch(url, {
     headers: { Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}` },

@@ -2,8 +2,7 @@ import type { SortOrder } from '@/app/_types/filters.types';
 
 const OPTIONS: { value: SortOrder; label: string }[] = [
   { value: 'latest', label: 'Latest' },
-  { value: 'oldest', label: 'Oldest' },
-  { value: 'most_liked', label: 'Most Liked' },
+  { value: 'relevant', label: 'Relevant' },
 ];
 
 interface SortFilterProps {

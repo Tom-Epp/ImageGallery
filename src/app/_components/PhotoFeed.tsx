@@ -12,7 +12,11 @@ export const PhotoFeed = () => {
   const [query, setQuery] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState<SortOrder>('latest');
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading, isError } = usePhotoFeed(query);
+  const { data, fetchNextPage, isFetchingNextPage, isLoading, isError } = usePhotoFeed(
+    query,
+    sortOrder,
+  );
+
   const { ref, isIntersecting } = useIntersectionObserver();
 
   const onSearch = (value: string) => setQuery(value);
@@ -25,70 +29,51 @@ export const PhotoFeed = () => {
       .filter((photo, index, self) => index === self.findIndex((p) => p.id === photo.id));
   }, [data]);
 
-  const sortedPhotos = useMemo(() => {
-    return [...photos].sort((a, b) => {
-      if (sortOrder === 'latest') {
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      }
-      if (sortOrder === 'oldest') {
-        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-      }
-      if (sortOrder === 'most_liked') {
-        return b.likes - a.likes;
-      }
-      return 0;
-    });
-  }, [photos, sortOrder]);
-
-  const columns = useMemo(() => {
-    const TOTAL_COLUMNS = 3;
-    if (!sortedPhotos) return [];
-
-    return sortedPhotos.reduce<Photo[][]>(
-      (acc, photo, index) => {
-        acc[index % TOTAL_COLUMNS].push(photo);
-        return acc;
-      },
-      Array.from({ length: TOTAL_COLUMNS }, () => []),
-    );
-  }, [sortedPhotos]);
-
   useEffect(() => {
     if (isIntersecting) {
       void fetchNextPage();
     }
   }, [fetchNextPage, isIntersecting]);
 
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center w-full my-4">
+          <LoaderIcon />
+        </div>
+      );
+    }
+
+    if (isError) {
+      return (
+        <div className="flex justify-center items-center w-full my-12">
+          <p className="text-sm md:text-lg text-center text-zinc-900 dark:text-zinc-100">
+            Something went wrong. Please try again later.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-3 gap-2 min-h-screen">
+        {photos.map((photo: Photo, index: number) => (
+          <PhotoCard key={photo.id} photo={photo} tabIndex={index} priority={index < 6} />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full min-h-screen p-3 md:p-6">
       <div className="max-w-5xl mx-auto">
         <SearchField onSearch={onSearch} />
-        <SortFilter selected={sortOrder} onChange={setSortOrder} />
-        {isLoading ? (
-          <div className="flex justify-center items-center w-full h-full my-4">
-            <LoaderIcon />
-          </div>
-        ) : (
-          <div className="flex gap-2 md:gap-3 items-start">
-            {columns.map((column, colIndex) => (
-              <div key={colIndex} className="flex flex-col flex-1 gap-2 md:gap-3">
-                {column.map((photo) => (
-                  <PhotoCard key={photo.id} photo={photo} tabIndex={sortedPhotos.indexOf(photo)} />
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
+        {query && <SortFilter selected={sortOrder} onChange={setSortOrder} />}
+        {renderContent()}
         <div ref={ref} className="h-1 w-full" />
         {isFetchingNextPage && (
           <div className="flex justify-center items-center w-full h-full my-4">
             <LoaderIcon />
           </div>
-        )}
-        {!isLoading && !isFetchingNextPage && isError && (
-          <p className="my-4 text-sm md:text-lg text-center text-zinc-900 dark:text-zinc-100">
-            Something went wrong. Please try again later.
-          </p>
         )}
       </div>
     </div>

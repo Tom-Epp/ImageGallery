@@ -1,1 +1,1 @@
-export type SortOrder = 'latest' | 'oldest' | 'most_liked';
+export type SortOrder = 'latest' | 'relevant';
