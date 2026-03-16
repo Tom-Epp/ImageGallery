@@ -69,7 +69,7 @@ Production deployment is done on Vercel, which provides easy integration with Ne
 ## Issues
 
 | Issue                                                                                                                        | Resolution                                                                                     |
-|------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | Data feching and caching                                                                                                     | Implemented TanStack `useInfiniteQuery` to handle paginated requests to Unsplash API           |
 | Duplicate photo keys across pages                                                                                            | Dedupe by id when flattening pages                                                             |
 | API key exposed on the client                                                                                                | Creating a Next.js API route to that proxies requests server-side.                             |
