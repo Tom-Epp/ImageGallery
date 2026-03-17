@@ -10,6 +10,7 @@ export const SearchField = ({ onSearch }: SearchFieldProps) => {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value);
 
   useEffect(() => {
+    if (search === '') return;
     const delay = setTimeout(() => {
       onSearch(search);
     }, 500);
