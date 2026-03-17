@@ -69,13 +69,15 @@ Production deployment is done on Vercel, which provides easy integration with Ne
 ## Issues
 
 | Issue                                                                                                                        | Resolution                                                                                     |
-| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+|------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
 | Data feching and caching                                                                                                     | Implemented TanStack `useInfiniteQuery` to handle paginated requests to Unsplash API           |
-| Duplicate photo keys across pages                                                                                            | Dedupe by id when flattening pages                                                             |
+| Duplicate photo keys across pages                                                                                            | Dedupe photos by id when flattening pages.                                                     |
 | API key exposed on the client                                                                                                | Creating a Next.js API route to that proxies requests server-side.                             |
-| Input lag search field - keystrokes updated state in the parent `PhotoFeed` re-rendering the entire tree including the input | Move state into search field                                                                   |
+| Input lag search field - keystrokes updated state in the parent `PhotoFeed` re-rendering the entire tree including the input | Move state into search field and only bubble up the debounced value.                           |
 | `undefined` items in photo array after adding search functionality                                                           | Normalizing the API route result to always unwrap `data.results` when a query param is present |
 | Sort filter causing layout shifts                                                                                            | Move sorting to the API via order_by param instead of reordering client-side                   |
+| queryClient singleton shared across server requests                                                                          | Initialise QueryClient inside provider with `useState`                                         |
+| `onSearch` callback firing on load                                                                                           | Update `useEffect` in SearchField to check that search term isn't empty                        |
 
 ---
 
